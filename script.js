@@ -162,9 +162,21 @@ backToTopButton.addEventListener("click", () => {
 
 function handleFormSubmit() {
     const form = document.querySelector('.contact-form');
+    const emailInput = document.getElementById("email");
+
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
     
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        if (!isValidEmail(emailInput.value)) {
+            showPopup('Please enter a valid email address', 'error');
+            emailInput.focus();
+            return;
+        }
         
         const formData = new FormData(form);
         
