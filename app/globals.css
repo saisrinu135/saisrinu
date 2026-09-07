@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+/* Class-based dark mode — driven by the pre-paint script in layout.tsx. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #ffffff;
+  --fg: #334155;
+  --card: #f8fafc;
+  --card-2: #f1f5f9;
+  --line: #e2e8f0;
+  --ink: #0f172a;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: #eff6ff;
+  /* #64748b, not the old #94a3b8 — that failed WCAG AA at ~2.6:1 on white. */
+  --muted: #64748b;
+  --success: #15803d;
+  --error: #dc2626;
+}
+
+.dark {
+  --bg: #0b1120;
+  --fg: #cbd5e1;
+  --card: #111c33;
+  --card-2: #16223d;
+  --line: #1e2c47;
+  --ink: #e8edf7;
+  --accent: #60a5fa;
+  --accent-hover: #93c5fd;
+  --accent-soft: #16294d;
+  --muted: #8ca0bf;
+  --success: #4ade80;
+  --error: #f87171;
+}
+
+/*
+ * `inline` makes the utilities reference the var rather than baking its value,
+ * so `bg-bg text-fg border-line` is automatically correct in both themes.
+ * Without it, `dark:` would be needed on ~80 elements.
+ */
+@theme inline {
+  --color-bg: var(--bg);
+  --color-fg: var(--fg);
+  --color-card: var(--card);
+  --color-card-2: var(--card-2);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+  --color-muted: var(--muted);
+  --color-success: var(--success);
+  --color-error: var(--error);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+/* smooth on html only — the old stylesheet had this on `*`. */
+html {
+  scroll-behavior: smooth;
+  /* Clears the fixed header when an anchor lands. */
+  scroll-padding-top: 5.5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Never remove an outline without a replacement ring. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/*
+ * Hero entrance is CSS, not motion. Motion's `initial` state gets serialised
+ * into the SSR'd HTML as inline `opacity:0`, which would leave the largest
+ * contentful element invisible until hydration — bad for LCP, and blank
+ * entirely if JS never arrives. CSS animates from first paint instead.
+ * `both` fill-mode is what holds the start state before the delay elapses.
+ */
+.rise-in {
+  animation: rise 0.6s cubic-bezier(0.22, 0.61, 0.24, 1) both;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.caret::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  margin-left: 2px;
+  background: var(--accent);
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+
+/*
+ * .01ms, NOT `animation: none` — with `none`, animation-fill-mode: both never
+ * applies, so any opacity:0 start state would stay invisible forever.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
