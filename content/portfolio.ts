@@ -147,6 +147,7 @@ export const portfolio = {
         "Docker",
       ],
       live: "https://cloud.saisrinu.in",
+      image: "/projects/cloudvault.png",
     },
   ],
 
