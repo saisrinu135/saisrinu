@@ -52,14 +52,24 @@ export default function Header() {
   }, []);
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-        scrolled
-          ? "border-b border-line bg-bg/80 backdrop-blur-md"
-          : "border-b border-transparent"
-      }`}
-    >
-      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
+    <header className="fixed inset-x-0 top-0 z-50">
+      {/*
+        The blurred bar is its own layer, deliberately NOT the <header> element.
+        A backdrop-filter creates a containing block for fixed-position
+        descendants, so putting it on the header would re-anchor the mobile
+        menu's `fixed inset-0` to the 80px header box: the menu background would
+        paint only that strip and its links would spill onto the page with
+        nothing behind them.
+      */}
+      <div
+        aria-hidden="true"
+        className={`absolute inset-0 border-b transition-colors duration-300 ${
+          scrolled
+            ? "border-line bg-bg/80 backdrop-blur-md"
+            : "border-transparent"
+        }`}
+      />
+      <div className="relative mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
         {/* A div, not a heading — the hero name is the page's only h1. */}
         <a
           href="#main"

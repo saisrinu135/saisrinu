@@ -60,6 +60,13 @@ export default function MobileNav({ links }: { links: readonly NavLink[] }) {
         Conditionally rendered, not parked at right:-100%. The old stylesheet
         slid the panel off-screen while leaving it in the tab order, so keyboard
         users tabbed into an invisible menu.
+
+        `fixed inset-0` only fills the viewport while no ancestor establishes a
+        containing block for fixed descendants. Never put backdrop-filter,
+        filter, transform, perspective, contain:paint, or will-change on any of
+        this panel's ancestors — the scrolled header used to carry
+        backdrop-blur, which shrank this panel to the 80px header box and left
+        the links painting over the page with no background behind them.
       */}
       <AnimatePresence>
         {open && (
