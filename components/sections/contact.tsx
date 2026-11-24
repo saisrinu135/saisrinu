@@ -1,11 +1,11 @@
-import { Mail, MapPin } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { portfolio } from "@/content/portfolio";
 import SectionHeader from "@/components/section-header";
 import { Reveal } from "@/components/reveal";
 import ContactForm from "@/components/contact-form";
 import { GithubIcon, InstagramIcon, LinkedInIcon } from "@/components/icons";
 
-const { email, location, social } = portfolio.personal;
+const { email, phone, location, social } = portfolio.personal;
 
 export default function Contact() {
   return (
@@ -39,6 +39,18 @@ export default function Contact() {
                     className="text-ink transition-colors hover:text-accent"
                   >
                     {email}
+                  </a>
+                </dd>
+              </div>
+              <div className="flex items-center gap-3">
+                <dt className="sr-only">Mobile</dt>
+                <Phone className="size-4 text-accent" aria-hidden="true" />
+                <dd>
+                  <a
+                    href={`tel:${phone.replace(/\s/g, "")}`}
+                    className="text-ink transition-colors hover:text-accent"
+                  >
+                    {phone}
                   </a>
                 </dd>
               </div>
